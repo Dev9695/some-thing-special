@@ -25,6 +25,9 @@ st.markdown("""
 .stApp {
     background: linear-gradient(180deg, #ffe6f0 0%, #fff0f5 60%, #ffffff 100%);
 }
+html, body, [class*="css"]  {
+    color: black !important;
+}
 
 /* Titles */
 h1, h2, h3 {
@@ -51,11 +54,26 @@ h1, h2, h3 {
 
 /* Cute Card */
 .val_card {
-    background: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.65);
     border-radius: 20px;
     padding: 18px;
     box-shadow: 0px 8px 20px rgba(255, 0, 100, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.45);
 }
+.fall {
+  position: fixed;
+  top: -20px;
+  animation: fallDown 8s linear infinite;
+  font-size: 22px;
+  opacity: 0.75;
+}
+@keyframes fallDown {
+  0% {transform: translateY(0) translateX(0); opacity: 0.9;}
+  100% {transform: translateY(110vh) translateX(30px); opacity: 0.0;}
+}
+
 
 /* Floating hearts */
 .heart {
@@ -70,13 +88,15 @@ h1, h2, h3 {
   100% {transform: translateY(-110vh) translateX(40px); opacity: 0.0;}
 }
 </style>
+<div class="heart" ...>💖</div>
+<div class="fall" style="left: 10%; animation-delay: 0s;">💗</div>
+<div class="fall" style="left: 25%; animation-delay: 1s;">💖</div>
+<div class="fall" style="left: 40%; animation-delay: 2s;">💕</div>
+<div class="fall" style="left: 55%; animation-delay: 0.5s;">💘</div>
+<div class="fall" style="left: 70%; animation-delay: 1.5s;">💞</div>
+<div class="fall" style="left: 85%; animation-delay: 2.5s;">💓</div>
 
-<div class="heart" style="left: 10%; animation-delay: 0s;">💖</div>
-<div class="heart" style="left: 25%; animation-delay: 1s;">💗</div>
-<div class="heart" style="left: 40%; animation-delay: 2s;">💘</div>
-<div class="heart" style="left: 55%; animation-delay: 0.5s;">💞</div>
-<div class="heart" style="left: 70%; animation-delay: 1.5s;">💕</div>
-<div class="heart" style="left: 85%; animation-delay: 2.5s;">💓</div>
+
 """, unsafe_allow_html=True)
 
 # -----------------------------
@@ -142,14 +162,14 @@ st.caption("Song: Dooro Dooro")
 audio_path = "music/dooro_dooro.mp3"
 
 if os.path.exists(audio_path):
-    with open(audio_path, "rb") as f:
-        st.audio(f.read(), format="audio/mp3")
+    audio_bytes = open(audio_path, "rb").read()
+    st.audio(audio_bytes, format="audio/mp3")
 else:
     st.warning("🎶 Song file missing! Upload: music/dooro_dooro.mp3")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-st.write("---")
+
 # -----------------------------
 # COUNTDOWN
 # -----------------------------
@@ -246,15 +266,23 @@ if st.session_state.accepted:
         unsafe_allow_html=True
     )
 
-    st.write("---")
-    st.markdown("## 🖼️ Our Memory Gallery 💕")
+   st.write("---")
+st.markdown("## 🎞️ Photo Slideshow 💕")
 
-    photos = [
-        "images/1.jpg",
-        "images/2.jpg",
-        "images/3.jpg",
-        "images/4.jpg"
-    ]
+img_folder = "images"
+if os.path.exists(img_folder):
+    all_imgs = sorted([f for f in os.listdir(img_folder) if f.lower().endswith((".jpg",".jpeg",".png"))])
+
+    if len(all_imgs) > 0:
+        slide = st.empty()
+        for img in all_imgs:
+            slide.image(os.path.join(img_folder, img), use_container_width=True)
+            time.sleep(2)
+    else:
+        st.warning("No images found for slideshow.")
+else:
+    st.warning("images folder missing!")
+
 
     cols = st.columns(4)
     for i in range(4):
@@ -279,5 +307,6 @@ with col_no:
         st.rerun()
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
