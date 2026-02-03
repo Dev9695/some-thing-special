@@ -134,13 +134,21 @@ st.write("---")
 # MUSIC
 # -----------------------------
 st.markdown("<div class='val_card'>", unsafe_allow_html=True)
+
 st.markdown("## 🎶 Play This Song (For You ❤️)")
-st.caption("Song: Kithe Reh Gaya")
-st.audio("music/kithe_reh_gaya.mp3")
+st.caption("Song: Dooro Dooro")
+
+audio_path = "music/dooro_dooro.mp3"
+
+if os.path.exists(audio_path):
+    with open(audio_path, "rb") as f:
+        st.audio(f.read(), format="audio/mp3")
+else:
+    st.warning("🎶 Song file missing! Upload: music/dooro_dooro.mp3")
+
 st.markdown("</div>", unsafe_allow_html=True)
 
 st.write("---")
-
 # -----------------------------
 # COUNTDOWN
 # -----------------------------
@@ -270,3 +278,4 @@ with col_no:
         st.rerun()
 
 st.markdown("</div>", unsafe_allow_html=True)
+
